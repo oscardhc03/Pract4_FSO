@@ -16,7 +16,13 @@ void scheduler(int arguments)
 	
 	int event=arguments & 0xFF00;
 	int callingthread=arguments & 0xFF;
-
+	
+	if(event==TIMER){
+		threads[callingthread].status=BLOCKED;
+		_enqueue(&ready,callingthread);
+		changethread=1;
+	}
+	
 	if(event==NEWTHREAD)
 	{
 		// Un nuevo hilo va a la cola de listos

@@ -5,6 +5,8 @@ extern int currthread;
 extern int blockevent;
 extern int unblockevent;
 
+int count=0;
+
 QUEUE ready;
 QUEUE waitinginevent[MAXTHREAD];
 
@@ -16,6 +18,19 @@ void scheduler(int arguments)
 	
 	int event=arguments & 0xFF00;
 	int callingthread=arguments & 0xFF;
+	
+	
+	if(event==TIMER){
+		if(count>=1){
+			threads[callingthread].status=BLOCKED;
+			_enqueue(&ready,callingthread);
+			changethread=1;
+			count=0;
+		}
+		else
+			count++;
+		
+	}
 
 	if(event==NEWTHREAD)
 	{
